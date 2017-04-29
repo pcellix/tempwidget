@@ -17,13 +17,16 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class JsonDownloader extends AsyncTask<String, Void, String> {
+public class JsonDownloaderAsync extends AsyncTask<Object, Void, String> {
     private String result_ = null;
+    private WeatherData weatherDataInstance_ = null;
+
     public String getResult() { return result_; }
 
     @Override
-    protected String doInBackground(String... params) {
-        String urlString = new String(params[0]);
+    protected String doInBackground(Object... params) {
+        weatherDataInstance_ = (WeatherData) params[0];
+        String urlString = new String((String)params[1]);
         String result = new String();
         try {
             URL url = new URL(urlString);
@@ -42,11 +45,11 @@ public class JsonDownloader extends AsyncTask<String, Void, String> {
 
 
     protected void onPostExecute(String result) {
-        if (result_ == null) {
+        if (result == null) {
             return;
         }
-        Log.w("AAA", result);
-        MainActivity.OnNewDataParsed(WeatherJsonParser.ParseWeatherData(result));
+        weatherDataInstance_.OnNewDataReceived(result);
+
     }
 }
  

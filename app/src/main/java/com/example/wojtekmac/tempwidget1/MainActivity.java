@@ -6,10 +6,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Observable;
+
 public class MainActivity extends AppCompatActivity {
     public static TextView textViewToUpdate = null;
     public static TextView textViewDateToUpdate = null;
     public static Button refreshButton = null;
+    public static WeatherData weatherData = new WeatherData();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,22 +23,18 @@ public class MainActivity extends AppCompatActivity {
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getWeather();
+                weatherData.updateWeatherData();
             }
         });
         //Basic AppInit
-        getWeather();
+       // weatherData.updateWeatherData();
     }
 
-    public static void OnNewDataParsed(WeatherData weatherData) {
-        if (textViewToUpdate == null) {
+    public static void OnNewDataToView() {
+        if (textViewToUpdate == null || textViewDateToUpdate == null) {
             return;
         }
         textViewToUpdate.setText(weatherData.getOutTemp());
         textViewDateToUpdate.setText(weatherData.getDate());
-    }
-    private void getWeather() {
-        JsonDownloader jsonDownloader = new JsonDownloader();
-        jsonDownloader.execute("http://vps266604.ovh.net/getWeather");
     }
 }
